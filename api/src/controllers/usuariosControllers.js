@@ -20,29 +20,27 @@ const getUsers = async () => {
 }
 
 const createUser = async ({nombre, apellido, dni, nacimiento, email, celular}) => {
-    const usuario = new Usuario ({
-        nombre,
-        apellido,
-        dni,
-        nacimiento: formatDate(new Date(nacimiento)),   // recibe fecha yyyy-mm-dd
-        email,
-        celular,
-    });
-
+    
     try {
+        const usuario = new Usuario ({
+            nombre,
+            apellido,
+            dni,
+            nacimiento: formatDate(new Date(nacimiento)),   // recibe fecha yyyy-mm-dd
+            email,
+            celular,
+        });
         const resultado = await usuario.save()
         console.log(resultado);
+        return resultado
         
     } catch (error) {
         // throw (error)
         // console.log(Object.keys(error.keyPattern)[0])
-        console.log(error)
         let key = Object.keys(error.keyPattern || {})
         
         //DNI o email repetido
         if(key.length){
-            console.log(key)
-            key = key
             throw `Ya existe una cuenta con este ${key[0]}`
         }
 
@@ -55,7 +53,6 @@ const createUser = async ({nombre, apellido, dni, nacimiento, email, celular}) =
         
         const validationError = error.message?.split(": ")[2]
         if(validationError)
-        console.log(validationError)
             throw validationError
     }
 }
